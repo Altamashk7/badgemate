@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <title>BADGE MATE</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="icon" href="/imgs/badge.ico" type="image/gif" sizes="16x16">
+        <link href="/css/issuer.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+            <div>
+                <a class="navbar-brand" href="/<%= user_id %>/dashboard">BADGE MATE</a>
+            </div>
+            
+            <div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/<%= user_id %>/badgepack">BADGEPACK</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/<%= user_id %>/earnbadge">EARN BADGES</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/<%= user_id %>/issuer">ISSUE BADGES</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">LOGOUT</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="create">
+        <% if(foundUser.isIssuer === false){ %> 
+            <h3 class="inputs">You are not registered please register first</h3>
+         
+            <form method="POST" action="/<%= user_id %>/newissuer">
+         
+                <div class="input-group inputs ">
+                 
+                    <textarea class="form-control" aria-label="With textarea" name="issuerWebsite" placeholder="Enter website or course link" ></textarea>
+                    
+             
+                  </div>
+                  <button id="signUpBtn" class="btn btn-lg btn-outline-dark btn-block inputs " type="submit" value="Become issuer">Become issuer</button>
+            </form>
+        <% } else { %> 
+           
+            <h2>You are registered user , create a badge or issue an existing badge </h2>
+
+            <div class="create text-center">
+            <form method="POST" action="/<%= user_id %>/createbadge" enctype="multipart/form-data">
+                <!-- <img class="mb-4" src="/imgs/badge.png" alt="" width="72" height="72"> -->
+                <h1 class="h3 mb-3 font-weight-normal">Create Badge</h1>
+                
+                <input type="text" name="name" class="form-control inputs" placeholder="Name of the badge" required>
+                <input class="form-control inputs" type="file" id="image" name="image" value="" required>
+                <div class="input-group inputs ">
+                 
+                    <textarea class="form-control" aria-label="With textarea" name="description" placeholder="Enter description" ></textarea>
+                  </div>
+            
+                  <div class="input-group inputs">
+                    <select class="custom-select" id="inputGroupSelect02" name="value" placeholder="Enter value" >
+                      <option selected>Choose...</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="4">Four</option>
+                      <option value="5">Five</option>
+                      <option value="6">Six</option>
+                      <option value="7">Seven</option>
+                      <option value="8">Eight</option>
+                      <option value="9">Nine</option>
+                      <option value="10">Ten</option>
+                    </select>
+                    </div>
+                    <input type="hidden" name="issuer" value="<%= foundUser.username %>" />
+                <button id="signUpBtn" class="btn btn-lg btn-outline-dark btn-block inputs " type="submit" value="Create badge">Create</button>
+             
+            </form>
+        </div>
+
+
+<div >
+            <h3>Created badges</h3>
+            <ol>
+                <% foundBadges.forEach(badge => { %>
+                    <li>
+                        <ul>
+                            <li>Name of the badge : <%= badge.name %> </li>
+                            <li>Value of the badge : <%= badge.value %> </li>
+                            <li>Description of the badge : <%= badge.description %> </li>
+                            <li>Creation Date of the badge : <%= badge.creationDate %> </li>
+                        </ul>
+                    </li>
+                    <form method="POST" action="/<%= foundUser._id %>/issuebadge">
+                        <label for="recipient">Issue this badge to : </label>
+                        <input id="recipient" class="form-control inputs"  name="recipient" type="text" placeholder="Recipient Username" />
+                        <label for="remark">Enter a personal remark for badge earner : </label>
+                        <textarea id="remark" name="remark" type="text" placeholder="Badge Earner Remark" class="form-control inputs" ></textarea>
+                        <input type="hidden" name="badgeId" value="<%= badge._id %>" />
+                        <input type="hidden" name="name" value="<%= badge.name %>" />
+                        <input type="hidden" name="value" value="<%= badge.value %>" />
+                        <input type="hidden" name="description" value="<%= badge.description %>" />
+                        <input type="hidden" name="issuer" value="<%= badge.issuer %>" />
+                        <input type="submit" value="Issue" />
+                    </form>
+
+
+                <% }); %> 
+            </ol>
+        <% } %> 
+        </div>
+    </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
